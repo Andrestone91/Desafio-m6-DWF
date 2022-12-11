@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Odibee+Sans&display=swap");
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+.root {
+  background: url(./assets/fondo.svg);
+}
+@media (min-width: 960px) {
+  .root {
+    background: url(./assets/fondo-desktop.svg);
+  }
+}
