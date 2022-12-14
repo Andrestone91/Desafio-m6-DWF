@@ -25,7 +25,9 @@ export class Nuevo extends HTMLElement {
                     state.askNewRoom(() => {
                         state.accesToRoom(() => {
                             state.setStatus(() => {
+                                state.init()
                                 setTimeout(() => {
+
                                     Router.go("/code")
                                 }, 3000);
                             })
@@ -65,6 +67,7 @@ export class Nuevo extends HTMLElement {
         <form class="form">
         <label>tu nombre</label>
         <input name="nombre"type="text" />
+        <button>play</button>
         </form>
         <h2 class="hidden">cargando...</h2>
         <div class="hands">

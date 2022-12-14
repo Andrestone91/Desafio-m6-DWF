@@ -112,7 +112,7 @@ app.post("/rooms/auth", (req, res) => {
         if (doc.exists) {
             const roomRef = rtdb.ref("rooms/" + roomId + "/currentGame")
             roomRef.update({
-                contenido: "update"
+
             })
             res.status(200).json({
                 roomId: doc.id,

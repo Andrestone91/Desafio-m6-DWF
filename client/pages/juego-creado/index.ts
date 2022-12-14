@@ -15,16 +15,19 @@ export class Creado extends HTMLElement {
             const target = e.target as any;
             const nombre = target.nombre.value
             const code = target.code.value;
-
-            state.setNombre(nombre)
-            state.createUser(() => {
-                state.signUp(() => {
+            state.setNombreOponente(nombre)
+            state.createUserOponente(() => {
+                state.signUpOponente(() => {
                     state.joinRoom(() => {
                         state.accesToRoom(() => {
-                            setTimeout(() => {
-                                Router.go("/code")
+                            state.init()
 
+                            setTimeout(() => {
+                                Router.go("/ready")
                             }, 3000)
+
+
+
                         })
                     }, code)
                 })

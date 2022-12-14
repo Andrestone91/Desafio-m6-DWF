@@ -5,24 +5,44 @@ const API_BASE_URL = "http://localhost:3000"
 
 const state = {
     data: {
-        usuario: "",
+        myName: "",
+        opponentName: "",
         online: false,
+        onlineOpponent: false,
+        ready: false,
+        readyOpponent: false,
         userId: "",
-        rtdbData: {},
+        userIdOpponent: "",
         roomId: "",
-        rtdbRoomId: ""
+        rtdbRoomId: "",
+        rtdbData: {},
+        historyScore: {
+            myScore: 0,
+            opponentScore: 0
+        }
     },
     listeners: [],
 
     init() {
         const cs = this.getState()
-        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId)
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
         roomRef.on("value", (snapshot) => {
             const data = snapshot.val()
             console.log(data);
-            const list = map(data.clave)
-            cs.rtdbData = list
-            this.setState(cs)
+            cs.rtdbData = data
+            const myName = data.playerOne.name
+            const userId = data.playerOne.userId
+            //  const opponentName = data.playerTwo.name
+            //  const userIdOpponent = data.playerTwo.userId
+            const ready = data.playerOne.ready
+            const readyOpponent = data.playerTwo.ready
+            this.setState({
+                ...cs,
+                myName,
+                userId,
+                ready,
+                readyOpponent,
+            })
         })
 
     },
@@ -41,10 +61,14 @@ const state = {
 
     setNombre(nombre: string) {
         const cs = this.getState();
-        cs.usuario = nombre;
+        cs.myName = nombre;
         this.setState(cs)
     },
-
+    setNombreOponente(nombreOponente: string) {
+        const cs = this.getState();
+        cs.opponentName = nombreOponente;
+        this.setState(cs)
+    },
     createUser(callback?) {
         const cs = this.getState()
         fetch(API_BASE_URL + "/newUser", {
@@ -52,7 +76,7 @@ const state = {
             headers: {
                 "content-type": "application/json"
             },
-            body: JSON.stringify({ nombre: cs.usuario })
+            body: JSON.stringify({ nombre: cs.myName })
         }).then((data) => {
             return data.json()
         }).then((res) => {
@@ -61,15 +85,31 @@ const state = {
             callback()
         })
     },
+    createUserOponente(callback?) {
+        const cs = this.getState()
+        fetch(API_BASE_URL + "/newUser", {
+            method: "post",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({ nombre: cs.opponentName })
+        }).then((data) => {
+            return data.json()
+        }).then((res) => {
+            cs.userIdOpponent = res.id
+            this.setState(cs)
+            callback()
+        })
+    },
     signUp(callback?) {
         const cs = this.getState();
-        if (cs.usuario) {
+        if (cs.myName) {
             fetch(API_BASE_URL + "/auth", {
                 method: "post",
                 headers: {
                     "content-type": "application/json"
                 },
-                body: JSON.stringify({ nombre: cs.usuario })
+                body: JSON.stringify({ nombre: cs.myName })
             }).then((data) => {
                 return data.json();
             }).then((res) => {
@@ -78,6 +118,34 @@ const state = {
                 callback()
             })
         }
+    },
+    signUpOponente(callback?) {
+        const cs = this.getState();
+        if (cs.opponentName) {
+            fetch(API_BASE_URL + "/auth", {
+                method: "post",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({ nombre: cs.opponentName })
+            }).then((data) => {
+                return data.json();
+            }).then((res) => {
+                cs.userIdOpponent = res.id
+                this.setState(cs)
+                callback()
+            })
+        }
+    },
+    ready() {
+        const cs = this.getState();
+        cs.ready = true
+        this.setState(cs)
+    },
+    readyOpponent() {
+        const cs = this.getState();
+        cs.readyOpponent = true
+        this.setState(cs)
     },
     askNewRoom(callback?) {
         const cs = this.getState();
@@ -127,34 +195,44 @@ const state = {
     accesToRoom(callback?) {
         const cs = this.getState();
         const roomId = cs.roomId
-        const userId = cs.userId
+        const userId = cs.userId || cs.userIdOpponent
         fetch(API_BASE_URL + "/rooms/" + roomId + "?userId=" + userId
         ).then((res) => {
             return res.json();
         }).then((data) => {
             cs.rtdbRoomId = data.rtdbRoomId;
             this.setState(cs)
-            this.init()
+
             if (callback) {
                 callback()
             }
         })
     },
+
     setStatus(callback?) {
         const cs = this.getState();
         const rtdbID = cs.rtdbRoomId
-        const userID = cs.userId
         fetch(API_BASE_URL + "/rooms/" + rtdbID, {
             method: "post",
             headers: {
                 "content-type": "application/json"
             },
             body: JSON.stringify({
-                userID: {
-                    online: true
+                playerOne: {
+                    userId: cs.userId,
+                    choice: "",
+                    name: cs.myName,
+                    online: cs.online,
+                    ready: cs.ready,
+                    start: ""
                 },
-                jugadorDos: {
-                    online: true
+                playerTwo: {
+                    userId: cs.userIdOpponent,
+                    choice: "",
+                    name: cs.opponentName,
+                    online: cs.onlineOpponent,
+                    ready: cs.readyOpponent,
+                    start: ""
                 }
             })
 
@@ -169,5 +247,6 @@ const state = {
     suscribe(callback: (any) => any) {
         this.listeners.push(callback)
     },
+
 }
 export { state }

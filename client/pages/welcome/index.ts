@@ -1,4 +1,5 @@
 import { Router } from "@vaadin/router"
+import { state } from "../../state";
 
 const div = document.createElement("div")
 const style = document.createElement("style");
@@ -15,6 +16,7 @@ export class Welcome extends HTMLElement {
                 Router.go("/nuevo-juegp");
             })
             botonIngresarEl?.addEventListener("click", (e) => {
+
                 Router.go("/ingresar-sala");
             })
 
