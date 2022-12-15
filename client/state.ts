@@ -306,19 +306,31 @@ const state = {
         roomRef.on("value", (snapshot) => {
             const data = snapshot.val()
 
-
-            if (data.playerTwo.name == cs.opponentName) {
+            if (data.playerTwo.name == "") {
                 Router.go("/instructions")
             }
-            if (data.playerTwo.name !== cs.opponentName && data.playerTwo.ready == true) {
-
-                console.log("sala llena");
+            if (data.playerTwo.name == cs.opponentName) {
+                Router.go("/instructions")
             }
 
         })
         if (callback) {
             callback()
         }
+    },
+    salaFull() {
+        const cs = this.getState()
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+        roomRef.on("value", (snapshot) => {
+            const data = snapshot.val()
+            if (data.playerTwo.name !== cs.opponentName) {
+                Router.go("/")
+            } if (data.playerTwo.name == "" || data.playerTwo.name == cs.opponentName) {
+                Router.go("/ready")
+            }
+
+        })
+
     },
     // testconnection() {
     //     const cs = this.getState()

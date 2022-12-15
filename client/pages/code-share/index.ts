@@ -4,7 +4,7 @@ const style = document.createElement("style")
 export class CodeShare extends HTMLElement {
     connectedCallback() {
         state.suscribe(() => {
-            // state.readyCheckAndPlay()
+            state.readyCheckAndPlay()
         })
         this.render()
         const ready = div.querySelector(".ready-boton")

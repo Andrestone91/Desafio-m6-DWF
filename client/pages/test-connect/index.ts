@@ -11,7 +11,10 @@ export class testConnect extends HTMLElement {
         ready.addEventListener("click", () => {
             state.readyOpponent(() => {
                 state.cargarRtdbPlayerOne(() => {
+
                     state.setStatus()
+
+
                 })
             })
         })

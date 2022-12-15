@@ -20,11 +20,11 @@ export class Creado extends HTMLElement {
                 state.signUpOponente(() => {
                     state.joinRoom(() => {
                         state.accesToRoom(() => {
-
                             state.init()
 
                             setTimeout(() => {
-                                Router.go("/ready")
+
+                                state.salaFull()
                             }, 3000)
 
 
