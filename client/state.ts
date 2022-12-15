@@ -300,6 +300,26 @@ const state = {
             callback()
         }
     },
+    testSala(callback?) {
+        const cs = this.getState()
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+        roomRef.on("value", (snapshot) => {
+            const data = snapshot.val()
+
+
+            if (data.playerTwo.name == cs.opponentName) {
+                Router.go("/instructions")
+            }
+            if (data.playerTwo.name !== cs.opponentName && data.playerTwo.ready == true) {
+
+                console.log("sala llena");
+            }
+
+        })
+        if (callback) {
+            callback()
+        }
+    },
     // testconnection() {
     //     const cs = this.getState()
     //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")

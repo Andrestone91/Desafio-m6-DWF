@@ -7,5 +7,5 @@ router.setRoutes([
     { path: '/ingresar-sala', component: 'juego-creado' },
     { path: '/code', component: 'code-share' },
     { path: '/ready', component: 'test-connect' },
-    { path: '/instructions', component: '' }
+    { path: '/instructions', component: 'reglas-intru' }
 ]);

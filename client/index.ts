@@ -9,6 +9,7 @@ import "./pages/nuevo-juego"
 import "./pages/juego-creado"
 import "./pages/code-share"
 import "./pages/test-connect"
+import "./pages/reglas"
 
 import "../server/router"
 import { state } from "./state"
