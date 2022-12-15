@@ -4,23 +4,19 @@ const style = document.createElement("style")
 export class testConnect extends HTMLElement {
     connectedCallback() {
         state.suscribe(() => {
-
-            //  const cs = state.getState()
-            //  const valor = cs.rtdbData
-            //
-            //  this.render()
+            state.readyCheckAndPlay()
         })
         this.render()
         const ready = div.querySelector(".ready-boton")
         ready.addEventListener("click", () => {
-
-            state.readyOpponent()
-            state.setStatus()
+            state.readyOpponent(() => {
+                state.cargarRtdbPlayerOne(() => {
+                    state.setStatus()
+                })
+            })
         })
     }
-
     render() {
-        state.init()
         const shadow = this.attachShadow({ mode: "open" })
         style.textContent = `
         .contenedor{
@@ -41,6 +37,8 @@ export class testConnect extends HTMLElement {
                 <button class="ready-boton">READY</button>   
                 `
         div.classList.add("contenedor");
+
+
 
         shadow.appendChild(div)
     }

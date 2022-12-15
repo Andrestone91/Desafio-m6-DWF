@@ -4,29 +4,21 @@ const style = document.createElement("style")
 export class CodeShare extends HTMLElement {
     connectedCallback() {
         state.suscribe(() => {
-
-            //  const cs = state.getState()
-            //  const valor = cs.rtdbData
-            //  cs.online1 = valor[1].online1
-            //  cs.online2 = valor[0].online2
+            state.readyCheckAndPlay()
         })
         this.render()
         const ready = div.querySelector(".ready-boton")
-
         ready.addEventListener("click", () => {
-            state.ready()
-            state.setStatus()
-
+            state.ready(() => {
+                state.cargarRtdbPlayerTwo(() => {
+                    state.setStatus()
+                })
+            })
         })
-
     }
-
-
     render() {
         const csss = state.getState()
         const valor = csss.rtdbData
-        console.log(valor);
-
         const shadow = this.attachShadow({ mode: "open" })
         style.textContent = `
         .contenedor{

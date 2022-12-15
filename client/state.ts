@@ -1,5 +1,6 @@
 import { rtdb } from "./rtdb"
 import map from "lodash/map"
+import { Router } from "@vaadin/router"
 
 const API_BASE_URL = "http://localhost:3000"
 
@@ -30,19 +31,21 @@ const state = {
             const data = snapshot.val()
             console.log(data);
             cs.rtdbData = data
-            const myName = data.playerOne.name
-            const userId = data.playerOne.userId
-            //  const opponentName = data.playerTwo.name
-            //  const userIdOpponent = data.playerTwo.userId
-            const ready = data.playerOne.ready
-            const readyOpponent = data.playerTwo.ready
-            this.setState({
-                ...cs,
-                myName,
-                userId,
-                ready,
-                readyOpponent,
-            })
+            //    const myName = data.playerOne.name
+            //    const userId = data.playerOne.userId
+            //    const opponentName = data.playerTwo.name
+            //    const userIdOpponent = data.playerTwo.userId
+            //    const ready = data.playerOne.ready
+            //    const readyOpponent = data.playerTwo.ready
+            //    this.setState({
+            //        ...cs,
+            //        myName,
+            //        userId,
+            //        opponentName,
+            //        userIdOpponent,
+            //        ready,
+            //        readyOpponent,
+            //    })
         })
 
     },
@@ -137,15 +140,21 @@ const state = {
             })
         }
     },
-    ready() {
+    ready(callback?) {
         const cs = this.getState();
         cs.ready = true
         this.setState(cs)
+        if (callback) {
+            callback()
+        }
     },
-    readyOpponent() {
+    readyOpponent(callback?) {
         const cs = this.getState();
         cs.readyOpponent = true
         this.setState(cs)
+        if (callback) {
+            callback()
+        }
     },
     askNewRoom(callback?) {
         const cs = this.getState();
@@ -244,6 +253,62 @@ const state = {
             }
         })
     },
+    cargarRtdbPlayerOne(callback?) {
+        const cs = this.getState()
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+        roomRef.on("value", (snapshot) => {
+            const data = snapshot.val()
+            const myName = data.playerOne.name
+            const userId = data.playerOne.userId
+            const ready = data.playerOne.ready
+            this.setState({
+                ...cs,
+                myName,
+                userId,
+                ready
+            })
+        })
+        if (callback) {
+            callback()
+        }
+    },
+    cargarRtdbPlayerTwo(callback?) {
+        const cs = this.getState()
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+        roomRef.on("value", (snapshot) => {
+            const data = snapshot.val()
+            const opponentName = data.playerTwo.name
+            const userIdOpponent = data.playerTwo.userId
+            const readyOpponent = data.playerTwo.ready
+            this.setState({
+                ...cs,
+                opponentName,
+                userIdOpponent,
+                readyOpponent
+            })
+        })
+        if (callback) {
+            callback()
+        }
+    },
+    readyCheckAndPlay(callback?) {
+        const cs = this.getState()
+        if (cs.ready && cs.readyOpponent == true) {
+            console.log("estan listos");
+            Router.go("/instructions")
+        } if (callback) {
+            callback()
+        }
+    },
+    // testconnection() {
+    //     const cs = this.getState()
+    //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+    //     roomRef.set({
+    //         playerOne: {
+    //             ready: true
+    //         }
+    //     })
+    // },
     suscribe(callback: (any) => any) {
         this.listeners.push(callback)
     },
