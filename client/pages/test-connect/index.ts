@@ -4,22 +4,24 @@ const style = document.createElement("style")
 export class testConnect extends HTMLElement {
     connectedCallback() {
         state.suscribe(() => {
-            state.readyCheckAndPlay()
+            state.verificaReadyOpponent()
         })
         this.render()
-        const ready = div.querySelector(".ready-boton")
+        const ready = div.querySelector<HTMLElement>(".ready-boton")
+        const msj = div.querySelector<HTMLElement>(".msj")
         ready.addEventListener("click", () => {
             state.readyOpponent(() => {
                 state.cargarRtdbPlayerOne(() => {
-
                     state.setStatus()
-
-
+                    msj.style.display = "inherit"
+                    ready.style.backgroundColor = "springgreen"
+                    ready.style.color = "black"
                 })
             })
         })
     }
     render() {
+
         const shadow = this.attachShadow({ mode: "open" })
         style.textContent = `
         .contenedor{
@@ -33,11 +35,15 @@ export class testConnect extends HTMLElement {
         .ready-boton{
             color:red;
         }
+        .msj{
+        display:none
+        }
         `
         shadow.appendChild(style)
 
         div.innerHTML = `
-                <button class="ready-boton">READY</button>   
+                <button class="ready-boton">ENTRAR SALA</button> 
+                <h1 class="msj">esperando a que tu oponente presione ready</h1>  
                 `
         div.classList.add("contenedor");
 

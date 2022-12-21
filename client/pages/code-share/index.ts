@@ -1,17 +1,20 @@
 import { state } from "../../state"
 const div = document.createElement("div")
-const style = document.createElement("style")
+const styleEl = document.createElement("style")
 export class CodeShare extends HTMLElement {
     connectedCallback() {
         state.suscribe(() => {
-            state.readyCheckAndPlay()
+            state.verificaReady()
         })
         this.render()
-        const ready = div.querySelector(".ready-boton")
+        const ready = div.querySelector<HTMLElement>(".ready-boton")
+
         ready.addEventListener("click", () => {
             state.ready(() => {
                 state.cargarRtdbPlayerTwo(() => {
                     state.setStatus()
+                    ready.style.backgroundColor = "springgreen"
+                    ready.style.color = "black"
                 })
             })
         })
@@ -20,7 +23,7 @@ export class CodeShare extends HTMLElement {
         const csss = state.getState()
         const valor = csss.rtdbData
         const shadow = this.attachShadow({ mode: "open" })
-        style.textContent = `
+        styleEl.textContent = `
         .contenedor{
             display: flex;
             flex-direction: column;
@@ -33,7 +36,7 @@ export class CodeShare extends HTMLElement {
             color:red;
         }
         `
-        shadow.appendChild(style)
+        shadow.appendChild(styleEl)
         const cs = state.getState()
         //  var room = ""
         //  setTimeout(() => {
@@ -51,6 +54,7 @@ export class CodeShare extends HTMLElement {
                 <h1>comparte el codigo:</h1>
                 <h1>${cs.roomId}</h1>
                 <div>${JSON.stringify(valor)}</div>
+                <h1>presiona ready y espera a que tu contrincante entre a la sala</h1>
                 <button class="ready-boton">READY</button>
                 <h1>con tu contrincante</h1>
                 `

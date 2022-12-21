@@ -21,14 +21,9 @@ export class Creado extends HTMLElement {
                     state.joinRoom(() => {
                         state.accesToRoom(() => {
                             state.init()
-
                             setTimeout(() => {
-
-                                state.salaFull()
+                                state.enterRoom()
                             }, 3000)
-
-
-
                         })
                     }, code)
                 })

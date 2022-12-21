@@ -12,6 +12,8 @@ const state = {
         onlineOpponent: false,
         ready: false,
         readyOpponent: false,
+        start: false,
+        startOpponent: false,
         userId: "",
         userIdOpponent: "",
         roomId: "",
@@ -156,6 +158,23 @@ const state = {
             callback()
         }
     },
+    play(callback?) {
+        const cs = this.getState();
+        cs.start = true
+        this.setState(cs)
+        if (callback) {
+            callback()
+        }
+    },
+    playOpponent(callback?) {
+        const cs = this.getState();
+        cs.startOpponent = true
+        this.setState(cs)
+        if (callback) {
+            callback()
+        }
+    },
+
     askNewRoom(callback?) {
         const cs = this.getState();
         if (cs.userId) {
@@ -233,7 +252,7 @@ const state = {
                     name: cs.myName,
                     online: cs.online,
                     ready: cs.ready,
-                    start: ""
+                    start: cs.start
                 },
                 playerTwo: {
                     userId: cs.userIdOpponent,
@@ -241,7 +260,7 @@ const state = {
                     name: cs.opponentName,
                     online: cs.onlineOpponent,
                     ready: cs.readyOpponent,
-                    start: ""
+                    start: cs.startOpponent
                 }
             })
 
@@ -261,11 +280,13 @@ const state = {
             const myName = data.playerOne.name
             const userId = data.playerOne.userId
             const ready = data.playerOne.ready
+            const start = data.playerOne.start
             this.setState({
                 ...cs,
                 myName,
                 userId,
-                ready
+                ready,
+                start
             })
         })
         if (callback) {
@@ -280,51 +301,103 @@ const state = {
             const opponentName = data.playerTwo.name
             const userIdOpponent = data.playerTwo.userId
             const readyOpponent = data.playerTwo.ready
+            const startOpponent = data.playerTwo.start
             this.setState({
                 ...cs,
                 opponentName,
                 userIdOpponent,
-                readyOpponent
+                readyOpponent,
+                startOpponent
             })
         })
         if (callback) {
             callback()
         }
     },
-    readyCheckAndPlay(callback?) {
+    // readyCheckAndPlay(callback?) {
+    //     const cs = this.getState()
+    //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+    //     roomRef.on("value", (snapshot) => {
+    //         const data = snapshot.val()
+    //         if (data.playerOne.ready == true && data.playerTwo.readyOpponent == false) {
+    //             Router.go("instructions")
+    //         } if (data.playerOne.ready == false && data.playerTwo.readyOpponent == true) {
+    //             Router.go("instructions-2")
+    //         }
+    //     })
+    //     if (callback) {
+    //         callback()
+    //     }
+    // },
+    verificaReady() {
         const cs = this.getState()
-        if (cs.ready && cs.readyOpponent == true) {
-            console.log("estan listos");
+        if (cs.ready == true && cs.readyOpponent == true) {
             Router.go("/instructions")
-        } if (callback) {
-            callback()
         }
+
     },
-    testSala(callback?) {
+    verificaReadyOpponent() {
         const cs = this.getState()
-        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
-        roomRef.on("value", (snapshot) => {
-            const data = snapshot.val()
+        if (cs.ready == true && cs.readyOpponent == true) {
+            Router.go("/instructions-2")
+        }
 
-            if (data.playerTwo.name == "") {
-                Router.go("/instructions")
-            }
-            if (data.playerTwo.name == cs.opponentName) {
-                Router.go("/instructions")
-            }
-
-        })
-        if (callback) {
-            callback()
+    },
+    // checkStart(callback?) {
+    //     const cs = this.getState()
+    //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+    //     roomRef.on("value", (snapshot) => {
+    //         const data = snapshot.val()
+    //         const start = data.playerOne.start
+    //         this.setState({
+    //             ...cs,
+    //             start
+    //         })
+    //     })
+    //     if (callback) {
+    //         callback()
+    //     }
+    // },
+    statusPlayGame() {
+        const cs = this.getState();
+        if (cs.start == true && cs.startOpponent == false) {
+            Router.go("/waiting")
+            console.log("p1 start");
         }
     },
-    salaFull() {
+    statusPlayGameOpponent() {
+        const cs = this.getState();
+        if (cs.start == false && cs.startOpponent == true) {
+            Router.go("/waiting-2")
+            console.log("p2 start");
+        }
+    },
+
+    // testSala(callback?) {
+    //     const cs = this.getState()
+    //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
+    //     roomRef.on("value", (snapshot) => {
+    //         const data = snapshot.val()
+    //
+    //         if (data.playerTwo.name == "") {
+    //             Router.go("/instructions")
+    //         }
+    //         if (data.playerTwo.name == cs.opponentName) {
+    //             Router.go("/instructions")
+    //         }
+    //
+    //     })
+    //     if (callback) {
+    //         callback()
+    //     }
+    // },
+    enterRoom() {
         const cs = this.getState()
         const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
         roomRef.on("value", (snapshot) => {
             const data = snapshot.val()
             if (data.playerTwo.name !== cs.opponentName) {
-                Router.go("/")
+                Router.go("/full-room")
             } if (data.playerTwo.name == "" || data.playerTwo.name == cs.opponentName) {
                 Router.go("/ready")
             }
@@ -332,6 +405,7 @@ const state = {
         })
 
     },
+
     // testconnection() {
     //     const cs = this.getState()
     //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")

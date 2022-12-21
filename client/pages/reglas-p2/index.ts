@@ -5,16 +5,14 @@ import { state } from "../../state";
 export class Rules extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" })
     connectedCallback() {
-
         state.suscribe(() => {
+
             if (state.getState().start == true && state.getState().startOpponent == true) {
                 Router.go("/play")
             }
-
         })
         this.render()
     }
-
     render() {
         const div = document.createElement("div")
         const style = document.createElement("style")
@@ -58,29 +56,18 @@ export class Rules extends HTMLElement {
         function botonAction() {
             const botonEl = div.querySelector(".botonEl");
             botonEl?.addEventListener("click", () => {
-                state.play(() => {
-                    state.cargarRtdbPlayerTwo(() => {
+                state.playOpponent(() => {
+                    state.cargarRtdbPlayerOne(() => {
                         state.setStatus(() => {
-                            state.statusPlayGame()
+                            state.statusPlayGameOpponent()
                         })
                     })
                 })
-                // state.play(() => {
-                //     state.setStatus(() => {
-                //
-                //     })
-                //     //  if (location.pathname == "/instructions") {
-                //     //      console.log("path nuevo");
-                //     //
-                //     //  }
-                //
-                //
-                // })
             })
         }
         botonAction();
         this.shadow.appendChild(div)
     }
 }
-customElements.define("reglas-intru", Rules)
+customElements.define("reglas-intru2", Rules)
 
