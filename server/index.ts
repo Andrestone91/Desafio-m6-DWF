@@ -83,7 +83,7 @@ app.post("/rooms", (req, res) => {
             }).then(() => {
                 const history = []
                 const roomLongRef = rtdbRef.key;
-                const nanoid = customAlphabet("123456789AEIOU", 5)
+                const nanoid = customAlphabet("123456789AEIUZT", 5)
                 const roomId = nanoid();
                 roomsCollection.doc(roomId.toString()).set({
                     rtdbRoomId: roomLongRef,
