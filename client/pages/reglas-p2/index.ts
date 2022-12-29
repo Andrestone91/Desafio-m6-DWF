@@ -5,16 +5,13 @@ import { state } from "../../state";
 export class Rules extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" })
     connectedCallback() {
-        state.suscribe(() => {
 
-            if (state.getState().start == true && state.getState().startOpponent == true) {
-                Router.go("/play")
-            }
-        })
+
         this.render()
     }
     render() {
         const cs = state.getState()
+
         const div = document.createElement("div")
         const style = document.createElement("style")
         const imagenReglas = require("/client/assets/reglas.svg");
@@ -60,6 +57,7 @@ export class Rules extends HTMLElement {
        </div>
         <img src=${imagenReglas} alt="">
         <custom-boton class="botonEl" title="¡Jugar!"></custom-boton>
+        <custom-boton class="botonElTest" title="test!"></custom-boton>
         <div class="hands">
             <hand-piedra></hand-piedra>
             <hand-papel></hand-papel>
@@ -80,6 +78,13 @@ export class Rules extends HTMLElement {
                 })
             })
         }
+        const botonElTest = div.querySelector(".botonElTest");
+        botonElTest.addEventListener("click", () => {
+
+            console.log(cs);
+
+
+        })
         botonAction();
         this.shadow.appendChild(div)
     }

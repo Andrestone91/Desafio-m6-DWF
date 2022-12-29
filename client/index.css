@@ -5,6 +5,11 @@
 body {
   margin: 0;
 }
+:root {
+  --fondo-verde: #4a950d99;
+  --fondo-rojo: #840505b8;
+  --fondo-gris: hsla(92, 6%, 43%, 0.6);
+}
 .root {
   background: url(./assets/fondo.svg);
 }

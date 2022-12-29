@@ -29,7 +29,7 @@ export class Nuevo extends HTMLElement {
                                 setTimeout(() => {
 
                                     Router.go("/code")
-                                }, 3000);
+                                }, 2000);
                             })
                         })
                     })
@@ -69,7 +69,15 @@ export class Nuevo extends HTMLElement {
         <input name="nombre"type="text" />
         <button>play</button>
         </form>
-        <h2 class="hidden">cargando...</h2>
+        <h2 class="hidden">
+        <iframe
+        src="https://giphy.com/embed/sSgvbe1m3n93G"
+        width="50"
+        height="50"
+        frameborder="0"
+        class="giphy-embed"
+        allowfullscreen
+      ></iframe></h2>
         <div class="hands">
     <hand-piedra></hand-piedra>
     <hand-papel></hand-papel>

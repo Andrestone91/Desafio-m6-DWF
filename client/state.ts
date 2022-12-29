@@ -1,6 +1,11 @@
 import { rtdb } from "./rtdb"
 import map from "lodash/map"
 import { Router } from "@vaadin/router"
+import { result } from "./pages/result";
+
+type Jugada = "piedra" | "papel" | "tijera";
+type Resultado = "ganaste" | "perdiste" | "empate"
+
 
 const API_BASE_URL = "http://localhost:3000"
 
@@ -19,6 +24,14 @@ const state = {
         roomId: "",
         rtdbRoomId: "",
         rtdbData: {},
+        playerMove: "",
+        moveOpponent: "",
+        again: false,
+        result: {
+            player: "",
+            playerOpponent: ""
+        },
+
         historyScore: {
             myScore: 0,
             opponentScore: 0
@@ -26,6 +39,25 @@ const state = {
     },
     listeners: [],
 
+
+    initLocalStorage() {
+        const lastLocalStorage = localStorage.getItem("data")
+
+        if (!lastLocalStorage) {
+            return;
+        } else {
+            state.setState(JSON.parse(lastLocalStorage))
+        }
+
+    },
+    scorePrueba() {
+        const score = localStorage.getItem("scoreData")
+        if (!score) {
+            return;
+        } else {
+            state.setState(JSON.parse(score))
+        }
+    },
     init() {
         const cs = this.getState()
         const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
@@ -57,10 +89,12 @@ const state = {
 
     setState(newState) {
         this.data = newState
+
         for (const cb of this.listeners) {
             cb()
         }
-        //   localStorage.setItem("data", JSON.stringify(newState))
+        //  localStorage.setItem("data", JSON.stringify(newState))
+
         console.log("he cambiado", this.data);
     },
 
@@ -161,7 +195,8 @@ const state = {
     play(callback?) {
         const cs = this.getState();
         cs.start = true
-        this.setState(cs)
+
+        // this.setState(cs)
         if (callback) {
             callback()
         }
@@ -169,12 +204,28 @@ const state = {
     playOpponent(callback?) {
         const cs = this.getState();
         cs.startOpponent = true
-        this.setState(cs)
+        //  this.setState(cs)
         if (callback) {
             callback()
         }
     },
 
+    playerMove(playerMove: string) {
+        const cs = this.getState()
+        cs.playerMove = playerMove
+        this.cargarRtdbPlayerTwo(() => {
+            this.setStatus()
+        })
+        this.setState(cs)
+    },
+    playerTwoMove(moveOpponent: string) {
+        const cs = this.getState()
+        cs.moveOpponent = moveOpponent
+        this.cargarRtdbPlayerOne(() => {
+            this.setStatus()
+        })
+        this.setState(cs)
+    },
     askNewRoom(callback?) {
         const cs = this.getState();
         if (cs.userId) {
@@ -248,18 +299,20 @@ const state = {
             body: JSON.stringify({
                 playerOne: {
                     userId: cs.userId,
-                    choice: "",
+                    choice: cs.playerMove,
                     name: cs.myName,
                     online: cs.online,
                     ready: cs.ready,
+                    score: cs.result.player,
                     start: cs.start
                 },
                 playerTwo: {
                     userId: cs.userIdOpponent,
-                    choice: "",
+                    choice: cs.moveOpponent,
                     name: cs.opponentName,
                     online: cs.onlineOpponent,
                     ready: cs.readyOpponent,
+                    score: cs.result.playerOpponent,
                     start: cs.startOpponent
                 }
             })
@@ -268,10 +321,74 @@ const state = {
             return res.json()
         }).then(() => {
             if (callback) {
+
                 callback()
             }
         })
     },
+
+    resetStart() {
+        const cs = this.getState();
+        const rtdbID = cs.rtdbRoomId
+        fetch(API_BASE_URL + "/rooms/" + rtdbID, {
+            method: "post",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                playerOne: {
+                    userId: cs.userId,
+                    choice: cs.playerMove,
+                    name: cs.myName,
+                    online: cs.online,
+                    ready: cs.ready,
+                    start: false
+                },
+                playerTwo: {
+                    userId: cs.userIdOpponent,
+                    choice: cs.moveOpponent,
+                    name: cs.opponentName,
+                    online: cs.onlineOpponent,
+                    ready: cs.readyOpponent,
+                    start: false
+                }
+            })
+
+        })
+
+    },
+    resetStartP2() {
+        const cs = this.getState();
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame" + "/playerTwo")
+        roomRef.update({
+
+            start: false
+        })
+    },
+    // playRTDB(callback?) {
+    //     const cs = this.getState();
+    //
+    //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame" + "/playerOne")
+    //     roomRef.update({
+    //
+    //         start: true
+    //     })
+    //     if (callback) {
+    //         callback()
+    //     }
+    // },
+    // playRTDB2(callback) {
+    //     const cs = this.getState();
+    //
+    //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame" + "/playerTwo")
+    //     roomRef.update({
+    //
+    //         start: true
+    //     })
+    //     if (callback) {
+    //         callback()
+    //     }
+    // },
     cargarRtdbPlayerOne(callback?) {
         const cs = this.getState()
         const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
@@ -281,12 +398,14 @@ const state = {
             const userId = data.playerOne.userId
             const ready = data.playerOne.ready
             const start = data.playerOne.start
+            const playerMove = data.playerOne.choice
             this.setState({
                 ...cs,
                 myName,
                 userId,
                 ready,
-                start
+                start,
+                playerMove
             })
         })
         if (callback) {
@@ -302,18 +421,21 @@ const state = {
             const userIdOpponent = data.playerTwo.userId
             const readyOpponent = data.playerTwo.ready
             const startOpponent = data.playerTwo.start
+            const moveOpponent = data.playerTwo.choice
             this.setState({
                 ...cs,
                 opponentName,
                 userIdOpponent,
                 readyOpponent,
-                startOpponent
+                startOpponent,
+                moveOpponent
             })
         })
         if (callback) {
             callback()
         }
     },
+
     // readyCheckAndPlay(callback?) {
     //     const cs = this.getState()
     //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")
@@ -331,17 +453,20 @@ const state = {
     // },
     verificaReady() {
         const cs = this.getState()
-        if (cs.ready == true && cs.readyOpponent == true) {
-            Router.go("/instructions")
+        if (location.pathname == "/code") {
+            if (cs.ready == true && cs.readyOpponent == true) {
+                Router.go("/instructions")
+            }
         }
 
     },
     verificaReadyOpponent() {
         const cs = this.getState()
-        if (cs.ready == true && cs.readyOpponent == true) {
-            Router.go("/instructions-2")
+        if (location.pathname == "/ready") {
+            if (cs.ready == true && cs.readyOpponent == true) {
+                Router.go("/instructions-2")
+            }
         }
-
     },
     // checkStart(callback?) {
     //     const cs = this.getState()
@@ -363,6 +488,8 @@ const state = {
         if (cs.start == true && cs.startOpponent == false) {
             Router.go("/waiting")
             console.log("p1 start");
+        } else if (cs.start == true && cs.startOpponent == true) {
+            Router.go("/play")
         }
     },
     statusPlayGameOpponent() {
@@ -370,6 +497,8 @@ const state = {
         if (cs.start == false && cs.startOpponent == true) {
             Router.go("/waiting-2")
             console.log("p2 start");
+        } else if (cs.start == true && cs.startOpponent == true) {
+            Router.go("/play-2")
         }
     },
 
@@ -399,13 +528,69 @@ const state = {
             if (data.playerTwo.name !== cs.opponentName) {
                 Router.go("/full-room")
             } if (data.playerTwo.name == "" || data.playerTwo.name == cs.opponentName) {
-                Router.go("/ready")
+                if (location.pathname == "/ingresar-sala") {
+                    Router.go("/ready")
+                }
             }
 
         })
 
     },
+    whoWins(playerP1: Jugada, playerP2: Jugada) {
+        const cs = this.getState();
 
+        const piedra: boolean = playerP1 == "piedra" && playerP2 == "tijera";
+        const papel: boolean = playerP1 == "papel" && playerP2 == "piedra";
+        const tijera: boolean = playerP1 == "tijera" && playerP2 == "papel";
+        const playerOneWins = [piedra, papel, tijera].includes(true);
+
+        const piedraEmpate: boolean = playerP1 == "piedra" && playerP2 == "piedra";
+        const papelEmpate: boolean = playerP1 == "papel" && playerP2 == "papel";
+        const tijeraEmpate: boolean = playerP1 == "tijera" && playerP2 == "tijera";
+        const empate = [piedraEmpate, papelEmpate, tijeraEmpate].includes(true);
+
+        if (empate) {
+            console.log("empate");
+            cs.result = { player: "empate", playerOpponent: "empate" }
+        }
+        if (playerOneWins) {
+            console.log("gana: " + cs.myName);
+            cs.result = { player: "ganaste", playerOpponent: "perdiste" }
+
+        } if (!empate && !playerOneWins) {
+            console.log("gana:" + cs.opponentName);
+            cs.result = { player: "perdiste", playerOpponent: "ganaste" }
+        }
+
+    },
+    pushToHistory(resultadoP1: Resultado, resultadoP2: Resultado) {
+        const cs = this.getState();
+        const playerOne = cs.historyScore.myScore;
+        const playerTwo = cs.historyScore.opponentScore;
+
+        if (resultadoP1 == "ganaste" && resultadoP2 == "perdiste") {
+            this.setState({
+                ...cs,
+                historyScore: {
+                    myScore: playerOne + 1,
+                    opponentScore: playerTwo,
+                },
+            })
+        } else if (resultadoP1 == "perdiste" && resultadoP2 == "ganaste") {
+            this.setState({
+                ...cs,
+                historyScore: {
+                    myScore: playerOne,
+                    opponentScore: playerTwo + 1,
+                },
+            })
+        }
+        this.saveScore();
+    },
+    saveScore() {
+        const csScore = this.getState().historyScore;
+        localStorage.setItem("scoreData", JSON.stringify(csScore));
+    },
     // testconnection() {
     //     const cs = this.getState()
     //     const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame")

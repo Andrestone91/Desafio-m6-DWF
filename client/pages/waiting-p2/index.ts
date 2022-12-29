@@ -4,7 +4,14 @@ import { state } from "../../state";
 
 export class Waiting extends HTMLElement {
     connectedCallback() {
+        state.suscribe(() => {
 
+            if (location.pathname == "/waiting-2") {
+                if (state.getState().start == true && state.getState().startOpponent == true) {
+                    Router.go("/play-2")
+                }
+            }
+        })
         this.render()
     }
     render() {

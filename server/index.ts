@@ -66,20 +66,7 @@ app.post("/rooms", (req, res) => {
             rtdbRef.set({
                 currentGame: [],
                 owner: userId
-                //  currentGame: {
-                //      jugadorUno: {
-                //          choice: "",
-                //          name: "",
-                //          online: "",
-                //          start: ""
-                //      },
-                //      jugadorDos: {
-                //          choice: "",
-                //          name: "",
-                //          online: "",
-                //          start: ""
-                //      }
-                //  }
+
             }).then(() => {
                 const history = []
                 const roomLongRef = rtdbRef.key;
@@ -88,9 +75,10 @@ app.post("/rooms", (req, res) => {
                 roomsCollection.doc(roomId.toString()).set({
                     rtdbRoomId: roomLongRef,
                     history: {
-                        jugada: {
-                            choice: ""
-                        }
+
+                        choiceP1: "",
+                        choiceP2: ""
+
                     }
                 }).then(() => {
                     res.status(201).json({

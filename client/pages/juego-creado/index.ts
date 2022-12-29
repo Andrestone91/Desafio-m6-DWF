@@ -7,11 +7,17 @@ const style = document.createElement("style");
 export class Creado extends HTMLElement {
     connectedCallback() {
         this.render()
+        const hidden = div.querySelector(".hidden")
         const form = div.querySelector(".form");
 
 
         form?.addEventListener("submit", (e) => {
             e.preventDefault();
+            if (hidden) {
+                hidden.classList.remove("hidden")
+            } else {
+                console.log("falso");
+            }
             const target = e.target as any;
             const nombre = target.nombre.value
             const code = target.code.value;
@@ -23,7 +29,7 @@ export class Creado extends HTMLElement {
                             state.init()
                             setTimeout(() => {
                                 state.enterRoom()
-                            }, 3000)
+                            }, 2000)
                         })
                     }, code)
                 })
@@ -49,6 +55,9 @@ export class Creado extends HTMLElement {
             height: 90vh;
             padding: 65px 0 0 0;
         }
+        .hidden{
+            display:none;
+        }
         `
 
         shadow.appendChild(style)
@@ -62,6 +71,15 @@ export class Creado extends HTMLElement {
         <input name="code" type="text" />
         <button class="boton">ingresar sala</button>
         </form>
+        <h2 class="hidden">
+        <iframe
+        src="https://giphy.com/embed/sSgvbe1m3n93G"
+        width="50"
+        height="50"
+        frameborder="0"
+        class="giphy-embed"
+        allowfullscreen
+      ></iframe></h2>
         <div class="hands">
     <hand-piedra></hand-piedra>
     <hand-papel></hand-papel>
