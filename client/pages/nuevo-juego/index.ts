@@ -27,7 +27,6 @@ export class Nuevo extends HTMLElement {
                             state.setStatus(() => {
                                 state.init()
                                 setTimeout(() => {
-
                                     Router.go("/code")
                                 }, 2000);
                             })

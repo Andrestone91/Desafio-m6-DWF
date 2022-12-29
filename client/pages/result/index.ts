@@ -50,6 +50,34 @@ export class result extends HTMLElement {
 
         const salir = div.querySelector(".salir");
         salir?.addEventListener("click", () => {
+
+            state.borrarScore()
+            state.setState({
+                myName: "",
+                opponentName: "",
+                online: false,
+                onlineOpponent: false,
+                ready: false,
+                readyOpponent: false,
+                start: false,
+                startOpponent: false,
+                userId: "",
+                userIdOpponent: "",
+                roomId: "",
+                rtdbRoomId: "",
+                rtdbData: {},
+                playerMove: "",
+                moveOpponent: "",
+                result: {
+                    player: "",
+                    playerOpponent: ""
+                },
+
+                historyScore: {
+                    myScore: 0,
+                    opponentScore: 0
+                }
+            })
             //   state.borrarScore();
             //   state.init();
 

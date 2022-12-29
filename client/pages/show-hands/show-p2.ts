@@ -49,6 +49,15 @@ export class show extends HTMLElement {
 
             state.whoWins(jugadaP1, jugadaP2)
         }
+        function points() {
+            const cs = state.getState();
+            if (cs.result.player == "ganaste" && cs.result.playerOpponent == "perdiste") {
+                state.pushToHistory("ganaste", "perdiste")
+            }
+            if (cs.result.player == "perdiste" && cs.result.playerOpponent == "ganaste") {
+                state.pushToHistory("perdiste", "ganaste")
+            }
+        }
         function result() {
 
             setTimeout(() => {
@@ -114,6 +123,7 @@ export class show extends HTMLElement {
         const handP1Tijera = div.querySelector(".hand-tijera-p1");
         showPlay()
         whoWinsGame()
+        points()
         result()
 
         shadow.appendChild(div)

@@ -26,7 +26,6 @@ const state = {
         rtdbData: {},
         playerMove: "",
         moveOpponent: "",
-        again: false,
         result: {
             player: "",
             playerOpponent: ""
@@ -42,7 +41,6 @@ const state = {
 
     initLocalStorage() {
         const lastLocalStorage = localStorage.getItem("data")
-
         if (!lastLocalStorage) {
             return;
         } else {
@@ -93,8 +91,7 @@ const state = {
         for (const cb of this.listeners) {
             cb()
         }
-        //  localStorage.setItem("data", JSON.stringify(newState))
-
+        localStorage.setItem("data", JSON.stringify(newState))
         console.log("he cambiado", this.data);
     },
 
@@ -303,7 +300,7 @@ const state = {
                     name: cs.myName,
                     online: cs.online,
                     ready: cs.ready,
-                    score: cs.result.player,
+                    score: cs.historyScore.myScore,
                     start: cs.start
                 },
                 playerTwo: {
@@ -312,7 +309,7 @@ const state = {
                     name: cs.opponentName,
                     online: cs.onlineOpponent,
                     ready: cs.readyOpponent,
-                    score: cs.result.playerOpponent,
+                    score: cs.historyScore.opponentScore,
                     start: cs.startOpponent
                 }
             })
@@ -342,6 +339,7 @@ const state = {
                     name: cs.myName,
                     online: cs.online,
                     ready: cs.ready,
+                    score: cs.historyScore.myScore,
                     start: false
                 },
                 playerTwo: {
@@ -350,6 +348,7 @@ const state = {
                     name: cs.opponentName,
                     online: cs.onlineOpponent,
                     ready: cs.readyOpponent,
+                    score: cs.historyScore.opponentScore,
                     start: false
                 }
             })
@@ -399,13 +398,16 @@ const state = {
             const ready = data.playerOne.ready
             const start = data.playerOne.start
             const playerMove = data.playerOne.choice
+            const score = data.playerOne.score
+            const scoreP2 = data.playerTwo.score
             this.setState({
                 ...cs,
                 myName,
                 userId,
                 ready,
                 start,
-                playerMove
+                playerMove,
+                historyScore: { myScore: score, opponentScore: scoreP2 }
             })
         })
         if (callback) {
@@ -422,13 +424,16 @@ const state = {
             const readyOpponent = data.playerTwo.ready
             const startOpponent = data.playerTwo.start
             const moveOpponent = data.playerTwo.choice
+            const scoreP2 = data.playerTwo.score
+            const score = data.playerOne.score
             this.setState({
                 ...cs,
                 opponentName,
                 userIdOpponent,
                 readyOpponent,
                 startOpponent,
-                moveOpponent
+                moveOpponent,
+                historyScore: { myScore: score, opponentScore: scoreP2 }
             })
         })
         if (callback) {
@@ -590,6 +595,10 @@ const state = {
     saveScore() {
         const csScore = this.getState().historyScore;
         localStorage.setItem("scoreData", JSON.stringify(csScore));
+    },
+    borrarScore() {
+        const sd = { myScore: 0, opponentScore: 0 };
+        localStorage.setItem("scoreData", JSON.stringify(sd));
     },
     // testconnection() {
     //     const cs = this.getState()
