@@ -166,7 +166,7 @@ export class Play extends HTMLElement {
           setTimeout(() => {
 
             Router.go("/show-hands")
-          }, 1000)
+          }, 1500)
         }
       }, 1000)
     }

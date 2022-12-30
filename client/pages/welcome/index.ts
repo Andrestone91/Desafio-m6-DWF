@@ -13,7 +13,7 @@ export class Welcome extends HTMLElement {
             const botonIngresarEl = div.querySelector(".ingresar") as any;
 
             botonEl?.addEventListener("click", (e) => {
-                Router.go("/nuevo-juegp");
+                Router.go("/nuevo-juego");
             })
             botonIngresarEl?.addEventListener("click", (e) => {
 

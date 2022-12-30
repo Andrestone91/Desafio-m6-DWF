@@ -8,7 +8,10 @@ export class Waiting extends HTMLElement {
         state.suscribe(() => {
             if (location.pathname == "/waiting") {
                 if (state.getState().start == true && state.getState().startOpponent == true) {
+
                     Router.go("/play")
+
+
                 }
             }
         })

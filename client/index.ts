@@ -4,6 +4,7 @@ import "./components/hand-papel"
 import "./components/hand-piedra"
 import "./components/hand-tijera"
 import "./components/score"
+import "./components/resultado"
 
 
 import "./pages/welcome"
@@ -26,8 +27,8 @@ import "./pages/result/result-p2"
 import "../server/router"
 import { state } from "./state"
 function main() {
-    //state.initLocalStorage()
+    state.initLocalStorage()
     // state.scorePrueba()
-    // state.init()
+    state.init()
 }
 main()

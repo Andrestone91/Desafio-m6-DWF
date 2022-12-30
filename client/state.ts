@@ -91,7 +91,7 @@ const state = {
         for (const cb of this.listeners) {
             cb()
         }
-        localStorage.setItem("data", JSON.stringify(newState))
+        //   localStorage.setItem("data", JSON.stringify(newState))
         console.log("he cambiado", this.data);
     },
 
@@ -189,11 +189,22 @@ const state = {
             callback()
         }
     },
+    setOnline(status: boolean) {
+        const cs = this.getState();
+        cs.online = status
+        this.setState(cs)
+    },
+    setOnlineOpponent(status: boolean) {
+        const cs = this.getState();
+        cs.onlineOpponent = status
+        this.setState(cs)
+    },
+
     play(callback?) {
         const cs = this.getState();
         cs.start = true
 
-        // this.setState(cs)
+
         if (callback) {
             callback()
         }
@@ -201,7 +212,7 @@ const state = {
     playOpponent(callback?) {
         const cs = this.getState();
         cs.startOpponent = true
-        //  this.setState(cs)
+
         if (callback) {
             callback()
         }
@@ -213,7 +224,7 @@ const state = {
         this.cargarRtdbPlayerTwo(() => {
             this.setStatus()
         })
-        this.setState(cs)
+
     },
     playerTwoMove(moveOpponent: string) {
         const cs = this.getState()
@@ -221,8 +232,27 @@ const state = {
         this.cargarRtdbPlayerOne(() => {
             this.setStatus()
         })
-        this.setState(cs)
+
     },
+    setChoice() {
+        const cs = this.getState();
+
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame" + "/playerOne")
+        roomRef.update({
+
+            choice: cs.playerMove
+        })
+    },
+    setChoiceP2() {
+        const cs = this.getState();
+
+        const roomRef = rtdb.ref("/rooms/" + cs.rtdbRoomId + "/currentGame" + "/playerTwo")
+        roomRef.update({
+
+            choice: cs.moveOpponent
+        })
+    },
+
     askNewRoom(callback?) {
         const cs = this.getState();
         if (cs.userId) {
@@ -335,7 +365,7 @@ const state = {
             body: JSON.stringify({
                 playerOne: {
                     userId: cs.userId,
-                    choice: cs.playerMove,
+                    choice: "",
                     name: cs.myName,
                     online: cs.online,
                     ready: cs.ready,
@@ -344,7 +374,7 @@ const state = {
                 },
                 playerTwo: {
                     userId: cs.userIdOpponent,
-                    choice: cs.moveOpponent,
+                    choice: "",
                     name: cs.opponentName,
                     online: cs.onlineOpponent,
                     ready: cs.readyOpponent,
@@ -397,6 +427,7 @@ const state = {
             const userId = data.playerOne.userId
             const ready = data.playerOne.ready
             const start = data.playerOne.start
+            const online = data.playerOne.online
             const playerMove = data.playerOne.choice
             const score = data.playerOne.score
             const scoreP2 = data.playerTwo.score
@@ -406,6 +437,7 @@ const state = {
                 userId,
                 ready,
                 start,
+                online,
                 playerMove,
                 historyScore: { myScore: score, opponentScore: scoreP2 }
             })
@@ -423,6 +455,7 @@ const state = {
             const userIdOpponent = data.playerTwo.userId
             const readyOpponent = data.playerTwo.ready
             const startOpponent = data.playerTwo.start
+            const onlineOpponent = data.playerOne.online
             const moveOpponent = data.playerTwo.choice
             const scoreP2 = data.playerTwo.score
             const score = data.playerOne.score
@@ -432,6 +465,7 @@ const state = {
                 userIdOpponent,
                 readyOpponent,
                 startOpponent,
+                onlineOpponent,
                 moveOpponent,
                 historyScore: { myScore: score, opponentScore: scoreP2 }
             })
@@ -593,8 +627,20 @@ const state = {
         this.saveScore();
     },
     saveScore() {
-        const csScore = this.getState().historyScore;
-        localStorage.setItem("scoreData", JSON.stringify(csScore));
+        const cs = this.getState()
+        const array = {
+            PlayerOne: cs.playerMove,
+            PlayerTwo: cs.moveOpponent
+        }
+
+        localStorage.setItem("scoreData", JSON.stringify(cs.historyScore));
+        fetch(API_BASE_URL + "/rooms/history/" + cs.roomId, {
+            method: "post",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({ score: cs.historyScore, history: array })
+        })
     },
     borrarScore() {
         const sd = { myScore: 0, opponentScore: 0 };

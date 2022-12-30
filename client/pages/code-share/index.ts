@@ -10,6 +10,7 @@ export class CodeShare extends HTMLElement {
         const ready = div.querySelector<HTMLElement>(".ready-boton")
 
         ready.addEventListener("click", () => {
+            state.setOnline(true)
             state.ready(() => {
                 state.cargarRtdbPlayerTwo(() => {
                     state.setStatus()

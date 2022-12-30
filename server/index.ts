@@ -74,12 +74,7 @@ app.post("/rooms", (req, res) => {
                 const roomId = nanoid();
                 roomsCollection.doc(roomId.toString()).set({
                     rtdbRoomId: roomLongRef,
-                    history: {
-
-                        choiceP1: "",
-                        choiceP2: ""
-
-                    }
+                    history: []
                 }).then(() => {
                     res.status(201).json({
                         message: "room creado",
@@ -91,6 +86,21 @@ app.post("/rooms", (req, res) => {
             res.status(404).json({
                 message: "usuario no encontrado"
             })
+        }
+    })
+})
+app.post("/rooms/history/:roomId", (req, res) => {
+    const roomId = req.params.roomId
+    const history = req.body.history
+    const score = req.body.score
+    roomsCollection.doc(roomId.toString()).get().then((dato) => {
+        if (dato.exists) {
+            const roomREf = roomsCollection.doc(roomId.toString())
+            roomREf.update({
+                history,
+                score
+            })
+            res.json({ message: "score update" })
         }
     })
 })

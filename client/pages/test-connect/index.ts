@@ -10,6 +10,7 @@ export class testConnect extends HTMLElement {
         const ready = div.querySelector<HTMLElement>(".ready-boton")
         const msj = div.querySelector<HTMLElement>(".msj")
         ready.addEventListener("click", () => {
+            state.setOnlineOpponent(true)
             state.readyOpponent(() => {
                 state.cargarRtdbPlayerOne(() => {
                     state.setStatus()

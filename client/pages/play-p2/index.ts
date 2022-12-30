@@ -25,17 +25,18 @@ export class Play extends HTMLElement {
       if (contador == 0 && state.getState().moveOpponent == "") {
         clearInterval(intervalo)
 
-
-        state.playerTwoMove(computerMove())
-        const cs = state.getState()
-        if (cs.playerMove == "piedra") {
-          classDinamic(piedra)
-        } if (cs.playerMove == "papel") {
-          classDinamic(papel)
-        } if (cs.playerMove == "tijera") {
-          classDinamic(tijera)
-        }
-        state.cargarRtdbPlayerOne()
+        setTimeout(() => {
+          state.playerTwoMove(computerMove())
+          const cs = state.getState()
+          if (cs.moveOpponent == "piedra") {
+            classDinamic(piedra)
+          } if (cs.moveOpponent == "papel") {
+            classDinamic(papel)
+          } if (cs.moveOpponent == "tijera") {
+            classDinamic(tijera)
+          }
+          state.cargarRtdbPlayerOne()
+        }, 200);
       } else if (contador == 0 && state.getState().moveOpponent !== "") {
         clearInterval(intervalo)
       }
@@ -164,7 +165,7 @@ export class Play extends HTMLElement {
 
           setTimeout(() => {
             Router.go("/show-hands-2")
-          }, 1000)
+          }, 1500)
         }
       }, 1000)
     }

@@ -1,13 +1,9 @@
 import { Router } from "@vaadin/router"
 import { state } from "../../state";
 
-
 export class Rules extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" })
     connectedCallback() {
-
-
-
         this.render()
     }
 

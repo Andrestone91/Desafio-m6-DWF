@@ -1,15 +1,14 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
 
-const div = document.createElement("div")
-const style = document.createElement("style")
 export class result extends HTMLElement {
     connectedCallback() {
         this.render()
     }
     render() {
         const shadow = this.attachShadow({ mode: "open" })
-
+        const div = document.createElement("div")
+        const style = document.createElement("style")
         style.textContent = `
         .contenedor{
             background: var(--fondo-gris);
@@ -30,7 +29,7 @@ export class result extends HTMLElement {
         shadow.appendChild(style)
         const cs = state.getState();
         div.innerHTML = `
-        <resultado-empate class="star">gano:${cs.myName}</resultado-empate>
+        <resultado-custom class="star"></resultado-custom>
         <custom-score puntosJugadorP1=${cs.historyScore.myScore} puntosJugadorP2= ${cs.historyScore.opponentScore}></custom-score>
         <custom-boton title="Play again" class="botonEl"></custom-boton>
         <custom-boton title="Salir" class="botonEl salir"></custom-boton>
@@ -38,9 +37,7 @@ export class result extends HTMLElement {
         div.classList.add("contenedor")
 
         const botonEl = div.querySelector(".botonEl");
-        //  state.getState().start = false
-        //  state.getState().startOpponent = false
-        // state.resetStart()
+
         botonEl?.addEventListener("click", () => {
             state.cargarRtdbPlayerOne(() => {
                 state.cargarRtdbPlayerTwo()
@@ -78,8 +75,6 @@ export class result extends HTMLElement {
                     opponentScore: 0
                 }
             })
-            //   state.borrarScore();
-            //   state.init();
 
             Router.go("/");
         })

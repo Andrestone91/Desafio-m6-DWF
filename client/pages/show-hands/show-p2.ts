@@ -59,10 +59,7 @@ export class show extends HTMLElement {
             }
         }
         function result() {
-
             setTimeout(() => {
-                //     state.resetStartP2()
-
                 Router.go("/result-2")
             }, 2500)
         }

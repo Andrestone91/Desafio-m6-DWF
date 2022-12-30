@@ -80,7 +80,7 @@ export class Rules extends HTMLElement {
         }
         const botonElTest = div.querySelector(".botonElTest");
         botonElTest.addEventListener("click", () => {
-
+            cs.moveOpponent = ""
             console.log(cs);
 
 
