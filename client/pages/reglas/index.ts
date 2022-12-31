@@ -1,4 +1,3 @@
-import { Router } from "@vaadin/router"
 import { state } from "../../state";
 
 export class Rules extends HTMLElement {
@@ -6,7 +5,6 @@ export class Rules extends HTMLElement {
     connectedCallback() {
         this.render()
     }
-
     render() {
         const cs = state.getState()
 
@@ -40,7 +38,6 @@ export class Rules extends HTMLElement {
             justify-content:space-around;
             width:100%;
         }
-        
         `
         this.shadow.appendChild(style)
         div.innerHTML = `
@@ -56,7 +53,6 @@ export class Rules extends HTMLElement {
         </div>
         <img src=${imagenReglas} alt="">
         <custom-boton class="botonEl" title="¡Jugar!"></custom-boton>
-        <custom-boton class="botonElTest" title="test!"></custom-boton>
         <div class="hands">
             <hand-piedra></hand-piedra>
             <hand-papel></hand-papel>
@@ -77,15 +73,6 @@ export class Rules extends HTMLElement {
                 })
             })
         }
-
-        const botonElTest = div.querySelector(".botonElTest");
-        botonElTest.addEventListener("click", () => {
-            //  state.playRTDB()
-
-            console.log(cs);
-
-
-        })
         botonAction();
         this.shadow.appendChild(div)
     }

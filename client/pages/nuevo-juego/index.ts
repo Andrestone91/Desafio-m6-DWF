@@ -1,7 +1,6 @@
 import { state } from "../../state";
 import { Router } from "@vaadin/router";
 
-
 const div = document.createElement("div");
 const style = document.createElement("style");
 
@@ -19,6 +18,9 @@ export class Nuevo extends HTMLElement {
             }
             const target = e.target as any;
             const nombre = target.nombre.value;
+            if (nombre == "") {
+                return hidden.classList.add("hidden"), window.alert("por favor ingresa tu nombre")
+            }
             state.setNombre(nombre)
             state.createUser(() => {
                 state.signUp(() => {
@@ -35,11 +37,23 @@ export class Nuevo extends HTMLElement {
                 })
             })
         })
-
     }
     render() {
         const shadow = this.attachShadow({ mode: "open" })
         style.textContent = `
+        .form{
+            display:flex;
+            flex-direction:column;
+        }
+        .input{
+            height:50px;
+            padding: 0px 5px;
+            font-size: 20px;
+            margin-bottom:10px;
+        }
+        .label{
+            font-size: 20px;
+        }
         .hands{
             display:flex;
             width: 80%;
@@ -58,15 +72,24 @@ export class Nuevo extends HTMLElement {
         .hidden{
             display:none;
         }
+        .boton-color{
+            background: #006CFC;
+            color: #D8FCFC;
+            border: 10px solid #001997;
+            border-radius: 10px;
+            width: 322px;
+            height: 87px;
+            font-size: 45px;
+            font-family: 'Odibee Sans';
+        }
         `
         shadow.appendChild(style)
         div.innerHTML = `
         <custom-presentacion></custom-presentacion>
-        <h1>nuevo juego</h1>
         <form class="form">
-        <label>tu nombre</label>
-        <input name="nombre"type="text" />
-        <button>play</button>
+        <label class="label">tu nombre</label>
+        <input class="input"name="nombre"type="text" />
+        <button class="boton-color">Empezar</button>
         </form>
         <h2 class="hidden">
         <iframe

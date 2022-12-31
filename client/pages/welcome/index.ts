@@ -7,19 +7,15 @@ const style = document.createElement("style");
 export class Welcome extends HTMLElement {
     connectedCallback() {
         this.render()
-
         function botonAction() {
             const botonEl = div.querySelector(".botonEl") as any;
             const botonIngresarEl = div.querySelector(".ingresar") as any;
-
             botonEl?.addEventListener("click", (e) => {
                 Router.go("/nuevo-juego");
             })
             botonIngresarEl?.addEventListener("click", (e) => {
-
                 Router.go("/ingresar-sala");
             })
-
         }
         botonAction();
     }
@@ -57,7 +53,6 @@ export class Welcome extends HTMLElement {
 </div>
 `
         div.classList.add("contenedor");
-
         shadow.appendChild(div)
 
     }

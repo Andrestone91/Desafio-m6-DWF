@@ -12,11 +12,6 @@ app.use(cors());
 const usersCollection = fireStore.collection("users")
 const roomsCollection = fireStore.collection("rooms")
 
-app.get("/prueba", (req, res) => {
-    usersCollection.doc("QkzcFzSdZ5ymfHSLhi4A").get().then((doc) => {
-        res.json(doc.data())
-    })
-})
 app.post("/newUser", (req, res) => {
     const { nombre } = req.body
     const dato = Date();
@@ -70,7 +65,7 @@ app.post("/rooms", (req, res) => {
             }).then(() => {
                 const history = []
                 const roomLongRef = rtdbRef.key;
-                const nanoid = customAlphabet("123456789AEIUZT", 5)
+                const nanoid = customAlphabet("123456789AEURWT", 5)
                 const roomId = nanoid();
                 roomsCollection.doc(roomId.toString()).set({
                     rtdbRoomId: roomLongRef,

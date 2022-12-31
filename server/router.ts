@@ -16,6 +16,10 @@ router.setRoutes([
     { path: '/play-2', component: 'Play-game2' },
     { path: '/show-hands', component: 'show-hands' },
     { path: '/show-hands-2', component: 'show-hands2' },
-    { path: '/result', component: 'result-game' },
-    { path: '/result-2', component: 'result-game2' }
+    { path: '/result-ganar', component: 'result-ganar' },
+    { path: '/result-ganar-2', component: 'result-ganar2' },
+    { path: '/result-perder', component: 'result-perder' },
+    { path: '/result-perder-2', component: 'result-perder2' },
+    { path: '/result-empate', component: 'result-empate' },
+    { path: '/result-empate-2', component: 'result-empate2' },
 ]);

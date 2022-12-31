@@ -4,8 +4,9 @@ import "./components/hand-papel"
 import "./components/hand-piedra"
 import "./components/hand-tijera"
 import "./components/score"
-import "./components/resultado"
-
+import "./components/resultado/resultado-ganar"
+import "./components/resultado/resultado-perder"
+import "./components/resultado/resultado-empate"
 
 import "./pages/welcome"
 import "./pages/nuevo-juego"
@@ -13,22 +14,19 @@ import "./pages/juego-creado"
 import "./pages/code-share"
 import "./pages/test-connect"
 import "./pages/full-room"
-import "./pages/reglas"
-import "./pages/reglas-p2"
-import "./pages/waiting-player"
-import "./pages/waiting-p2"
-import "./pages/play"
-import "./pages/play-p2"
+import "./pages/reglas/index"
+import "./pages/reglas/reglas-p2"
+import "./pages/waiting-player/index"
+import "./pages/waiting-player/waiting-p2"
+import "./pages/play/index"
+import "./pages/play/play-p2"
 import "./pages/show-hands/index"
 import "./pages/show-hands/show-p2"
-import "./pages/result/index"
-import "./pages/result/result-p2"
+import "./pages/result/ganaste/index"
+import "./pages/result/ganaste/result-p2"
+import "./pages/result/perdiste/index"
+import "./pages/result/perdiste/result-p2"
+import "./pages/result/empate/index"
+import "./pages/result/empate/result-p2"
 
 import "../server/router"
-import { state } from "./state"
-function main() {
-    state.initLocalStorage()
-    // state.scorePrueba()
-    state.init()
-}
-main()

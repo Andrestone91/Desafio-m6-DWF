@@ -1,5 +1,5 @@
 import { Router } from "@vaadin/router";
-import { state } from "../../state";
+import { state } from "../../../state";
 
 export class result extends HTMLElement {
     connectedCallback() {
@@ -11,7 +11,7 @@ export class result extends HTMLElement {
         const style = document.createElement("style")
         style.textContent = `
         .contenedor{
-            background: var(--fondo-gris);
+            background: var(--fondo-rojo);
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
@@ -29,7 +29,7 @@ export class result extends HTMLElement {
         shadow.appendChild(style)
         const cs = state.getState();
         div.innerHTML = `
-        <resultado-custom class="star">Resultado</resultado-custom>
+        <resultado-perder class="star">Resultado</resultado-perder>
         <custom-score puntosJugadorP1=${cs.historyScore.myScore} puntosJugadorP2= ${cs.historyScore.opponentScore}></custom-score>
         <custom-boton title="Play again" class="botonEl"></custom-boton>
         <custom-boton title="Salir" class="botonEl salir"></custom-boton>
@@ -78,4 +78,4 @@ export class result extends HTMLElement {
         shadow.appendChild(div)
     }
 }
-customElements.define("result-game2", result)
+customElements.define("result-perder2", result)

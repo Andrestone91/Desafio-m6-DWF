@@ -1,27 +1,17 @@
-import { Router } from "@vaadin/router"
 import { state } from "../../state";
 
-
-export class Waiting extends HTMLElement {
+export class Rules extends HTMLElement {
+    shadow = this.attachShadow({ mode: "open" })
     connectedCallback() {
-        state.suscribe(() => {
-
-            if (location.pathname == "/waiting-2") {
-                if (state.getState().start == true && state.getState().startOpponent == true) {
-
-
-                    Router.go("/play-2")
-
-                }
-            }
-        })
         this.render()
     }
     render() {
+        const cs = state.getState()
+
         const div = document.createElement("div")
         const style = document.createElement("style")
-        const cs = state.getState()
-        const shadow = this.attachShadow({ mode: "open" })
+        const imagenReglas = require("/client/assets/reglas.svg");
+
         style.textContent = `
         .hands{
             display:flex;
@@ -49,7 +39,7 @@ export class Waiting extends HTMLElement {
             width:100%;
         }
         `
-        shadow.appendChild(style)
+        this.shadow.appendChild(style)
         div.innerHTML = `
         <div class="container-score">
         <div>
@@ -61,18 +51,31 @@ export class Waiting extends HTMLElement {
            <h1>${cs.roomId}</h1>
          </div>
        </div>
-        <h1>Esperando a que <b>${cs.myName}</b> presione ¡jugar!...</h1>
-
+        <img src=${imagenReglas} alt="">
+        <custom-boton class="botonEl" title="¡Jugar!"></custom-boton>
         <div class="hands">
             <hand-piedra></hand-piedra>
             <hand-papel></hand-papel>
             <hand-tijera></hand-tijera>
-            </div>
-            `
+        </div>
+        `
         div.classList.add("contenedor");
 
-
-        shadow.appendChild(div)
+        function botonAction() {
+            const botonEl = div.querySelector(".botonEl");
+            botonEl?.addEventListener("click", () => {
+                state.playOpponent(() => {
+                    state.cargarRtdbPlayerOne(() => {
+                        state.setStatus(() => {
+                            state.statusPlayGameOpponent()
+                        })
+                    })
+                })
+            })
+        }
+        botonAction();
+        this.shadow.appendChild(div)
     }
 }
-customElements.define("waiting-player2", Waiting)
+customElements.define("reglas-intru2", Rules)
+

@@ -1,6 +1,4 @@
 import { Router } from "@vaadin/router"
-import { state } from "../../state";
-
 
 export class FullRoom extends HTMLElement {
     connectedCallback() {

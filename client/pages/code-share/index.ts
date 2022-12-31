@@ -8,14 +8,13 @@ export class CodeShare extends HTMLElement {
         })
         this.render()
         const ready = div.querySelector<HTMLElement>(".ready-boton")
-
+        const hiddenEl = div.querySelector(".hidden")
         ready.addEventListener("click", () => {
             state.setOnline(true)
             state.ready(() => {
                 state.cargarRtdbPlayerTwo(() => {
                     state.setStatus()
-                    ready.style.backgroundColor = "springgreen"
-                    ready.style.color = "black"
+                    hiddenEl.classList.add("ocultar")
                 })
             })
         })
@@ -28,36 +27,33 @@ export class CodeShare extends HTMLElement {
         .contenedor{
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
             height: 90vh;
             padding: 65px 0 0 0;
         }
-        .ready-boton{
-            color:red;
+        .ocultar{
+            display:none
+        }
+        .hidden{
+            text-align:center
+        }
+        .codigo{
+            font-family:"system-ui";
+            font-size: 45px;;
         }
         `
         shadow.appendChild(styleEl)
         const cs = state.getState()
-        //  var room = ""
-        //  setTimeout(() => {
-        //
-        //      if (cs.userId !== "") {
-        //          room = cs.userId
-        //          console.log(room);
-        //      } else if (cs.userId == "") {
-        //          console.log("nada");
-        //      }
-        //
-        //  }, 1000);
 
         div.innerHTML = `
                 <h1>comparte el codigo:</h1>
-                <h1>${cs.roomId}</h1>
-                <div>${JSON.stringify(valor)}</div>
-                <h1>presiona ready y espera a que tu contrincante entre a la sala</h1>
-                <button class="ready-boton">READY</button>
+                <h1 class="codigo">${cs.roomId}</h1>
                 <h1>con tu contrincante</h1>
+                <div class="hidden">
+                <h1>presiona listo y espera a que tu contrincante entre a la sala</h1>
+                <custom-boton class="ready-boton" title="Listo"></custom-boton>
+                </div>
                 `
         div.classList.add("contenedor");
 

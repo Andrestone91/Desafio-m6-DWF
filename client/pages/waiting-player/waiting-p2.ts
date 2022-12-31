@@ -1,21 +1,22 @@
 import { Router } from "@vaadin/router"
 import { state } from "../../state";
 
-
-export class Rules extends HTMLElement {
-    shadow = this.attachShadow({ mode: "open" })
+export class Waiting extends HTMLElement {
     connectedCallback() {
-
-
+        state.suscribe(() => {
+            if (location.pathname == "/waiting-2") {
+                if (state.getState().start == true && state.getState().startOpponent == true) {
+                    Router.go("/play-2")
+                }
+            }
+        })
         this.render()
     }
     render() {
-        const cs = state.getState()
-
         const div = document.createElement("div")
         const style = document.createElement("style")
-        const imagenReglas = require("/client/assets/reglas.svg");
-
+        const cs = state.getState()
+        const shadow = this.attachShadow({ mode: "open" })
         style.textContent = `
         .hands{
             display:flex;
@@ -43,7 +44,7 @@ export class Rules extends HTMLElement {
             width:100%;
         }
         `
-        this.shadow.appendChild(style)
+        shadow.appendChild(style)
         div.innerHTML = `
         <div class="container-score">
         <div>
@@ -55,39 +56,17 @@ export class Rules extends HTMLElement {
            <h1>${cs.roomId}</h1>
          </div>
        </div>
-        <img src=${imagenReglas} alt="">
-        <custom-boton class="botonEl" title="¡Jugar!"></custom-boton>
-        <custom-boton class="botonElTest" title="test!"></custom-boton>
+        <h1>Esperando a que <b>${cs.myName}</b> presione ¡jugar!...</h1>
+
         <div class="hands">
             <hand-piedra></hand-piedra>
             <hand-papel></hand-papel>
             <hand-tijera></hand-tijera>
-        </div>
-        `
+            </div>
+            `
         div.classList.add("contenedor");
 
-        function botonAction() {
-            const botonEl = div.querySelector(".botonEl");
-            botonEl?.addEventListener("click", () => {
-                state.playOpponent(() => {
-                    state.cargarRtdbPlayerOne(() => {
-                        state.setStatus(() => {
-                            state.statusPlayGameOpponent()
-                        })
-                    })
-                })
-            })
-        }
-        const botonElTest = div.querySelector(".botonElTest");
-        botonElTest.addEventListener("click", () => {
-            cs.moveOpponent = ""
-            console.log(cs);
-
-
-        })
-        botonAction();
-        this.shadow.appendChild(div)
+        shadow.appendChild(div)
     }
 }
-customElements.define("reglas-intru2", Rules)
-
+customElements.define("waiting-player2", Waiting)

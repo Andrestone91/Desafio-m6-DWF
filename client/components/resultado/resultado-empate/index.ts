@@ -6,7 +6,7 @@ export class Resultado extends HTMLElement {
         const shadow = this.attachShadow({ mode: "open" })
         const div = document.createElement("div")
         const style = document.createElement("style")
-        const imagenSrc = require("/client/assets/resultado.png");
+        const imagenSrc = require("/client/assets/resultado-empate.png");
         style.textContent = `
         .estrella{
             width:255px;
@@ -25,4 +25,4 @@ export class Resultado extends HTMLElement {
         shadow.appendChild(div)
     }
 }
-customElements.define("resultado-custom", Resultado)
+customElements.define("resultado-empate", Resultado)

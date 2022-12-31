@@ -53,17 +53,27 @@ export class show extends HTMLElement {
             const cs = state.getState();
             if (cs.result.player == "ganaste" && cs.result.playerOpponent == "perdiste") {
                 state.pushToHistory("ganaste", "perdiste")
+                setTimeout(() => {
+                    state.resetStart()
+                    Router.go("/result-ganar")
+                }, 2500)
             }
             if (cs.result.player == "perdiste" && cs.result.playerOpponent == "ganaste") {
                 state.pushToHistory("perdiste", "ganaste")
+                setTimeout(() => {
+                    state.resetStart()
+                    Router.go("/result-perder")
+                }, 2500)
+            }
+            if (cs.result.player == "empate" && cs.result.playerOpponent == "empate") {
+                state.pushToHistory("empate", "empate")
+                setTimeout(() => {
+                    state.resetStart()
+                    Router.go("/result-empate")
+                }, 2500)
             }
         }
-        function result() {
-            setTimeout(() => {
-                state.resetStart()
-                Router.go("/result")
-            }, 2500)
-        }
+
         style.textContent = `
         .hands,
         .hands-p2{
@@ -122,7 +132,7 @@ export class show extends HTMLElement {
         showPlay()
         whoWinsGame()
         points()
-        result()
+
 
         shadow.appendChild(div)
     }

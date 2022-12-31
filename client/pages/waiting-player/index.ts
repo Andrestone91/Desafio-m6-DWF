@@ -1,17 +1,12 @@
 import { Router } from "@vaadin/router"
 import { state } from "../../state";
 
-
 export class Waiting extends HTMLElement {
     connectedCallback() {
-
         state.suscribe(() => {
             if (location.pathname == "/waiting") {
                 if (state.getState().start == true && state.getState().startOpponent == true) {
-
                     Router.go("/play")
-
-
                 }
             }
         })
@@ -70,7 +65,6 @@ export class Waiting extends HTMLElement {
             </div>
             `
         div.classList.add("contenedor");
-
 
         shadow.appendChild(div)
     }

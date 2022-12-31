@@ -9,14 +9,15 @@ export class testConnect extends HTMLElement {
         this.render()
         const ready = div.querySelector<HTMLElement>(".ready-boton")
         const msj = div.querySelector<HTMLElement>(".msj")
+
         ready.addEventListener("click", () => {
             state.setOnlineOpponent(true)
             state.readyOpponent(() => {
                 state.cargarRtdbPlayerOne(() => {
                     state.setStatus()
                     msj.style.display = "inherit"
-                    ready.style.backgroundColor = "springgreen"
-                    ready.style.color = "black"
+                    ready.classList.add("hidden")
+
                 })
             })
         })
@@ -28,13 +29,14 @@ export class testConnect extends HTMLElement {
         .contenedor{
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-evenly;
             align-items: center;
             height: 90vh;
             padding: 65px 0 0 0;
         }
-        .ready-boton{
-            color:red;
+       
+        .hidden{
+          display:none;
         }
         .msj{
         display:none
@@ -43,12 +45,10 @@ export class testConnect extends HTMLElement {
         shadow.appendChild(style)
 
         div.innerHTML = `
-                <button class="ready-boton">ENTRAR SALA</button> 
-                <h1 class="msj">esperando a que tu oponente presione ready</h1>  
+                <custom-boton class="ready-boton" title="Ingresar sala"></custom-boton> 
+                <h1 class="msj">esperando a que tu oponente presione listo</h1>  
                 `
         div.classList.add("contenedor");
-
-
 
         shadow.appendChild(div)
     }
