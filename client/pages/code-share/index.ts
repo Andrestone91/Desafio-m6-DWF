@@ -9,12 +9,12 @@ export class CodeShare extends HTMLElement {
         this.render()
         const ready = div.querySelector<HTMLElement>(".ready-boton")
         const hiddenEl = div.querySelector(".hidden")
-        ready.addEventListener("click", () => {
+        ready?.addEventListener("click", () => {
             state.setOnline(true)
             state.ready(() => {
                 state.cargarRtdbPlayerTwo(() => {
                     state.setStatus()
-                    hiddenEl.classList.add("ocultar")
+                    hiddenEl?.classList.add("ocultar")
                 })
             })
         })

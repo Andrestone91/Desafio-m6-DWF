@@ -3,14 +3,25 @@ import * as express from "express";
 import * as cors from "cors"
 import { customAlphabet, nanoid } from "nanoid"
 
+import * as dotenv from "dotenv"
+dotenv.config()
+
 const app = express()
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
 
+
 const usersCollection = fireStore.collection("users")
 const roomsCollection = fireStore.collection("rooms")
+
+app.get("/env", (req, res) => {
+    res.json({
+        environment: process.env.NODE_ENV,
+        equipo: process.env.EQUIPO
+    })
+})
 
 app.post("/newUser", (req, res) => {
     const { nombre } = req.body
@@ -147,7 +158,10 @@ app.get("/rooms/:roomId", (req, res) => {
         }
     })
 })
-
+app.use(express.static("dist"));
+app.get("*", (req, res) => {
+    res.sendFile(__dirname, "../dist/index.html")
+})
 app.listen(port, () => {
     console.log(`http://localhost:${port}`);
 })

@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv"
+dotenv.config()
 import "./components/botonEl"
 import "./components/presentacionTitle"
 import "./components/hand-papel"
