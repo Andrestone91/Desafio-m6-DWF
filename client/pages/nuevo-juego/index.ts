@@ -30,7 +30,7 @@ export class Nuevo extends HTMLElement {
                                 state.init()
                                 setTimeout(() => {
                                     Router.go("/code")
-                                }, 2000);
+                                }, 3000);
                             })
                         })
                     })

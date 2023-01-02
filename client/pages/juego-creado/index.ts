@@ -33,7 +33,7 @@ export class Creado extends HTMLElement {
                             state.init()
                             setTimeout(() => {
                                 state.enterRoom()
-                            }, 2000)
+                            }, 3000)
                         })
                     }, code)
                 })
