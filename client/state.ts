@@ -4,7 +4,9 @@ import { Router } from "@vaadin/router"
 type Jugada = "piedra" | "papel" | "tijera";
 type Resultado = "ganaste" | "perdiste" | "empate"
 
-const API_BASE_URL = "http://localhost:3000"
+//const API_BASE_URL = "http://localhost:3000"
+const API_BASE_URL = "https://piedra-papel-y-tijera-online.onrender.com"
+
 
 const state = {
     data: {
