@@ -4,3 +4,11 @@ dist
 index.js
 firebase.js
 .env
+router.js
+rtdb.js
+state.js
+play-p2.js
+reglas-p2.js
+result-p2.js
+show-p2.js
+waiting-p2.js
